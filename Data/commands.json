@@ -1,5 +1,18 @@
 {
     "commands" : [
-        
+        {
+            "name": "식사추천",
+            "description":"페이퍼가 식사를 추천해줍니다.",
+            "options": [
+                {
+                    "name":"count",
+                    "description" : "식사 추천 개수",
+                    "min_value" : 1,
+                    "max_value" : 10,
+                    "required":true,
+                    "type": 4
+                }
+            ]
+        }
     ]
 }
