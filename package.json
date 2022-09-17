@@ -1,0 +1,23 @@
+{
+  "name": "discordpaperbot",
+  "version": "1.0.0",
+  "description": "discord paper bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MolecularPaper/DiscordPaperBot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MolecularPaper/DiscordPaperBot/issues"
+  },
+  "homepage": "https://github.com/MolecularPaper/DiscordPaperBot#readme",
+  "dependencies": {
+    "discord.js": "^14.3.0",
+    "dotenv": "^16.0.2"
+  }
+}
