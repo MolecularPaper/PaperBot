@@ -14,7 +14,7 @@ client.on('interactionCreate', async interaction => {
     
     moudels.forEach(async moudle => {
         try{
-            await moudle.excute(interaction);
+            await moudle.excute(interaction, client);
         }
         catch (error){
             console.log(error);

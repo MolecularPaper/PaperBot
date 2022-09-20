@@ -18,7 +18,7 @@
   "homepage": "https://github.com/MolecularPaper/DiscordPaperBot#readme",
   "dependencies": {
     "discord.js": "^14.3.0",
-    "dotenv": "^16.0.2"
-  },
-  "devDependencies": {}
+    "dotenv": "^16.0.2",
+    "tesseract.js": "^3.0.2"
+  }
 }

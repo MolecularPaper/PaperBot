@@ -3,9 +3,9 @@ export class MoudleBase{
         this.commandName = commandName
     }
 
-    async excute (interaction) {
+    async excute (interaction, client) {
         if (interaction.commandName === this.commandName) {
-            await this.entry(interaction);
+            await this.entry(interaction, client);
         }
     }
 

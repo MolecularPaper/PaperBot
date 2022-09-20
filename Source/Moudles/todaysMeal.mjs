@@ -11,7 +11,7 @@ export class Meal extends MoudleBase{
         this.mealList = readFileSync("./Data/menuList.txt", "utf-8").split(/\r?\n/);
     }
 
-    async entry(interaction){
+    async entry(interaction, client){
         const count = interaction.options.getInteger("count");
         const randomMealList = this.getRandomMealList(count);
 

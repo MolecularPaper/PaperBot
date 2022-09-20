@@ -10,7 +10,7 @@ export class PaperInfo extends MoudleBase{
         this.infoEmbed.setDescription(this.info)
     }
 
-    async entry(interaction){
+    async entry(interaction, client){
         await interaction.reply({embeds: [this.infoEmbed]});
     }
 }
