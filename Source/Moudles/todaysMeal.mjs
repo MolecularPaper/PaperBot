@@ -19,7 +19,7 @@ export class Meal extends MoudleBase{
         for(var i = 0; i < randomMealList.length; i++){
             description += format("{0}. {1}\n", i + 1, randomMealList[i]);
         }
-
+        
         await interaction.reply({embeds: [mealEmbed.setDescription(description)]});
     }
 
