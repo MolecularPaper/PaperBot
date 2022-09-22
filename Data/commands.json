@@ -1,12 +1,24 @@
 {
     "commands" : [
         {
-            "name": "식사추천",
-            "description":"페이퍼가 식사를 추천해줍니다.",
+            "name": "meal-recommend",
+            "name_localizations": {
+                "ko": "식사추천"
+            },
+            "description":"Paper recommends meals.",
+            "description_localizations": {
+                "ko": "식사를 추천해줍니다."
+            },
             "options": [
                 {
                     "name":"count",
-                    "description" : "식사 추천 개수",
+                    "name_localizations": {
+                        "ko": "개수"
+                    },
+                    "description" : "Meal recommend count",
+                    "description_localizations": {
+                        "ko": "식사 추천 개수"
+                    },
                     "min_value" : 1,
                     "max_value" : 10,
                     "required":true,
@@ -15,73 +27,151 @@
             ]
         },
         {
-            "name": "정보",
-            "description":"페이퍼의 정보를 보여줍니다."
+            "name": "info",
+            "name_localizations": {
+                "ko": "정보"
+            },
+            "description":"Show Papaer's Info",
+            "description_localizations": {
+                "ko": "저의 정보를 보여줍니다."
+            }
         },
         {
-            "name": "게임순위",
-            "description":"최신 게임 순위를 보여줍니다."
+            "name": "game-ranking",
+            "name_localizations": {
+                "ko": "게임순위"
+            },
+            "description":"Shows the latest game rankings.",
+            "description_localizations": {
+                "ko": "최신 게임 순위를 보여줍니다."
+            }
         },
         {
-            "name": "계산",
-            "description":"페이퍼가 수식을 계산해줍니다.",
+            "name": "calculation",
+            "name_localizations": {
+                "ko": "계산"
+            },
+            "description":"The paper will calculate the formula.",
+            "description_localizations": {
+                "ko": "수식을 계산해줍니다."
+            },
             "options": [
                 {
                     "name":"expression",
-                    "description" : "수식",
+                    "name_localizations": {
+                        "ko": "수학식"
+                    },
+                    "description" : "Mathematic expression to be used for calculation.",
+                    "description_localizations": {
+                        "ko": "계산에 사용할 수학식."
+                    },
                     "required":true,
                     "type": 3
                 }
             ]
         },
         {
-            "name": "노래",
-            "description":"페이퍼의 노래재생 기능입니다.",
+            "name": "song",
+            "name_localizations": {
+                "ko": "노래"
+            },
+            "description":"Playback of songs by Paperbot.",
+            "description_localizations": {
+                "ko": "노래재생 기능입니다."
+            },
             "options" : [
                 {
-                    "name": "연결",
-                    "description":"페이퍼를 음성채널에 연결시킵니다.",
-                    "type" : 1
-                },
-                {
-                    "name": "재생",
-                    "description":"노래를 재생시킵니다.",
+                    "name": "play",
+                    "name_localizations": {
+                        "ko": "재생"
+                    },
+                    "description":"Play the song.",
+                    "description_localizations": {
+                        "ko": "노래를 재생시킵니다."
+                    },
                     "type" : 1,
                     "options" : [
                         {
-                            "name":"링크",
-                            "description" : "재생할 노래의 링크",
+                            "name":"link",
+                            "name_localizations": {
+                                "ko": "링크"
+                            },
+                            "description" : "Link to the song you want to play",
+                            "description_localizations": {
+                                "ko": "재생할 노래의 링크"
+                            },
                             "required":true,
                             "type": 3
                         }
                     ]
                 },
                 {
-                    "name": "일시중지",
-                    "description":"재생중인 노래를 일시중지시킵니다.",
+                    "name": "pause",
+                    "name_localizations": {
+                        "ko": "일시정지"
+                    },
+                    "description":"Pause a song that is being played.",
+                    "description_localizations": {
+                        "ko": "재생중인 노래를 일시중지시킵니다."
+                    },
                     "type" : 1
                 },
                 {
-                    "name": "다시재생",
-                    "description":"일시중지된 노래를 다시 재생합니다.",
+                    "name": "replay",
+                    "name_localizations": {
+                        "ko": "다시재생"
+                    },
+                    "description":"Play the paused song again.",
+                    "description_localizations": {
+                        "ko": "일시중지된 노래를 다시 재생합니다."
+                    },
                     "type" : 1
                 },
                 {
-                    "name": "넘기기",
-                    "description":"재생중인 노래를 넘기거나, 선택된 노래를 목록에서 제거합니다.",
+                    "name": "skip",
+                    "name_localizations": {
+                        "ko": "넘기기"
+                    },
+                    "description":"Pass the song you are playing, or remove the selected song from the list.",
+                    "description_localizations": {
+                        "ko": "재생중인 노래를 넘기거나, 선택된 노래를 목록에서 제거합니다."
+                    },
                     "type" : 1,
                     "options" : [
                         {
-                            "name":"번호",
-                            "description" : "넘길 노래의 목록 번호",
+                            "name":"index",
+                            "name_localizations": {
+                                "ko": "번호"
+                            },
+                            "description" : "List number of songs to pass",
+                            "description_localizations": {
+                                "ko": "넘길 노래의 목록 번호"
+                            },
                             "required":false,
                             "type": 4
                         }
                     ]
                 },
                 {
-                    "name": "목록",
-                    "description":"등록된 노래 목록을 표시해줍니다.",
+                    "name": "playlist",
+                    "name_localizations": {
+                        "ko": "목록"
+                    },
+                    "description":"Displays a list of registered songs.",
+                    "description_localizations": {
+                        "ko": "등록된 노래 목록을 표시해줍니다."
+                    },
+                    "type" : 1
+                },
+                {
+                    "name": "shuffle",
+                    "name_localizations": {
+                        "ko": "셔플"
+                    },
+                    "description":"Shuffle playlist",
+                    "description_localizations": {
+                        "ko": "재생 목록을 섞어줍니다."
+                    },
                     "type" : 1
                 }
             ]
