@@ -16,25 +16,26 @@ export class Music extends MoudleBase{
         }
 
         let embed = new EmbedBuilder().setTitle("노래");
+        const queue = this.player.createQueue(interaction.guild);
+
         if(interaction.options.getSubcommand() == "play"){
-            this.playLink(interaction, embed)
+            this.playLink(interaction, queue, embed)
         } else if (interaction.options.getSubcommand() == "playlist"){
-            this.showQueue(interaction);
+            this.showQueue(interaction, queue);
+        } else if (interaction.options.getSubcommand() == "quit"){
+            this.quit(interaction, queue);
         } else if (interaction.options.getSubcommand() == "skip"){
-            this.skip(interaction);
+            this.skip(interaction, queue);
+        } else if(interaction.options.getSubcommand() == "pause"){
+            this.pasue(interaction, queue);
+        } else if(interaction.options.getSubcommand() == "replay"){
+            this.replay(interaction, queue);
+        } else if(interaction.options.getSubcommand() == "shuffle"){
+            this.shuffle(interaction, queue);
         }
-        else if(interaction.options.getSubcommand() == "pause"){
-            this.pasue(interaction);
-        }
-        else if(interaction.options.getSubcommand() == "replay"){
-            this.replay(interaction);
-        }
-        else if(interaction.options.getSubcommand() == "shuffle"){
-            this.shuffle(interaction);
-        }
-        
     }
 
+    // 링크의 노래를 현재 재생목록에 추가
     async addTrack(embed, queue, result){
         const song = result.tracks[0];
         await queue.addTrack(song);
@@ -45,6 +46,7 @@ export class Music extends MoudleBase{
         return embed
     }
 
+    // 링크의 재생 목록 전체를 현재 재생목록에 추가
     async addPlaylist(embed, queue, result, url){
         const tracks = result.tracks;
         await queue.addTracks(tracks);
@@ -55,8 +57,8 @@ export class Music extends MoudleBase{
         return embed
     }
 
-    async playLink(interaction, embed){
-        const queue = this.player.createQueue(interaction.guild);
+    // 노래 재생
+    async playLink(interaction, queue, embed){
         if(!queue.connection) await queue.connect(interaction.member.voice.channel);
 
         let url = interaction.options.getString("link");
@@ -77,8 +79,18 @@ export class Music extends MoudleBase{
         await interaction.reply({embeds:[embed]});
     }
 
-    async showQueue(interaction){
-        const queue = this.player.getQueue(interaction.guild);
+    async quit(interaction, queue){
+        if(!queue){
+            await interaction.reply("재생목록이 존재하지 않습니다.");
+            return;
+        }
+
+        await interaction.reply("노래를 멈추고 재생목록을 삭제한뒤 음성채널을 나갑니다.")
+        queue.destroy(true);
+    }
+    
+    // 재생목록 출력
+    async showQueue(interaction, queue){
         if(!queue || !queue.playing){
             await interaction.reply("재생목록이 존재하지 않습니다.");
             return;
@@ -93,13 +105,13 @@ export class Music extends MoudleBase{
         }
 
         const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
-            return format("[{0}] {1} - {2} <{3}>", page * 10 + i + 1, song.title, song.duration, song.requestedBy.id)
+            return format("[{0}] {1} - {2}", page * 10 + i + 1, song.title, song.duration)
         });
 
         const currentSong = queue.current;
 
         const embed = new EmbedBuilder().setTitle("재생목록").setDescription("**현재 재생중**\n" + 
-        (currentSong ? format("{0} - {1} <{2}>", page * 10 + i + 1, currentSong.title, currentSong.duration, currentSong.requestedBy.id) : "재생중인 곡 없음") +
+        (currentSong ? format("{0} - {1}", currentSong.title, currentSong.duration) : "재생중인 곡 없음") +
         '\n\n**재생목록**\n' + queueString
         )
         .setFooter({
@@ -109,10 +121,9 @@ export class Music extends MoudleBase{
 
         await interaction.reply({embeds:[embed]});
     }
-
-    async skip(interaction){
-        const queue = this.player.getQueue(interaction.guild);
-
+    
+    // 노래 스킵
+    async skip(interaction, queue){
         if(!queue){
             await interaction.reply("재생목록이 존재하지 않습니다.");
             return;
@@ -131,30 +142,46 @@ export class Music extends MoudleBase{
         await interaction.reply(format("다음 곡을 넘김 - {0} - {1} <{2}>", song.title, song.duration, song.requestedBy.id))
     }
 
-    async shuffle(interaction){
-        this.player.createQueue(interaction.guild).shuffle();
-        await interaction.reply("재생목록을 셔플했습니다.");
+    // 재생목록 셔플
+    async shuffle(interaction, queue){
+        if(!queue){
+            await interaction.reply("재생목록이 존재하지 않습니다.");
+            return;
+        }
+
+        queue.shuffle();
+        await interaction.reply("재생목록을 섞었습니다.");
     }
 
-    async pasue(interaction){
-        const queue = this.player.getQueue(interaction.guild);
+    // 노래 일시정지
+    async pasue(interaction, queue){
+        if(!queue){
+            await interaction.reply("재생목록이 존재하지 않습니다.");
+            return;
+        }
 
         if(queue.paused){
-            await interaction.replay("이미 재생이 중지되어 있습니다.");
+            await interaction.reply("이미 재생이 중지되어 있습니다.");
             return;
         }
 
-        queue.pasue();
+        queue.setPaused(true);
+        await interaction.reply("노래 재생을 일시정지 했습니다.");
     }
 
-    async replay(interaction){
-        const queue = this.player.getQueue(interaction.guild);
-
-        if(!queue.paused){
-            await interaction.replay("이미 재생중입니다.");
+    // 노래 일시정지 해제
+    async replay(interaction, queue){
+        if(!queue){
+            await interaction.reply("재생목록이 존재하지 않습니다.");
             return;
         }
 
-        queue.resume();
+        if(!queue.paused){
+            await interaction.reply("이미 재생중입니다.");
+            return;
+        }
+
+        queue.setPaused(false);
+        await interaction.reply("노래를 다시 재생합니다.");
     }
 }

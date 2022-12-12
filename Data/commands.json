@@ -130,6 +130,17 @@
                     ]
                 },
                 {
+                    "name": "quit",
+                    "name_localizations": {
+                        "ko": "종료"
+                    },
+                    "description":"Stop play music and leave voice channel",
+                    "description_localizations": {
+                        "ko": "노래 재생을 멈추고, 음성 채널에서 나갑니다."
+                    },
+                    "type" : 1
+                },
+                {
                     "name": "pause",
                     "name_localizations": {
                         "ko": "일시정지"
