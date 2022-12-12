@@ -3,7 +3,7 @@ import { registerCommands } from './Source/System/deployCommands.mjs';
 import { GenerateMoudle } from './Source/System/moudleGenerator.mjs';
 import { config } from 'dotenv';
 
-config({path: './config.env'});
+config({path: './Data/config.env'});
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds, 
