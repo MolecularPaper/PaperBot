@@ -222,6 +222,61 @@
                         "ko": "재생 목록을 섞어줍니다."
                     },
                     "type" : 1
+                },
+                {
+                    "name": "loop",
+                    "name_localizations": {
+                        "ko": "반복"
+                    },
+                    "description":"Set loop mode",
+                    "description_localizations": {
+                        "ko": "반복 상태를 설정해줍니다."
+                    },
+                    "type" : 1,
+                    "options":[
+                        {
+                            "name": "mode",
+                            "name_localizations": {
+                                "ko": "상태"
+                            },
+                            "type": 4,
+                            "description": "Loop type",
+                            "description_localizations": {
+                                "ko": "반복 상태"
+                            },
+                            "required": true,
+                            "choices": [
+                                {
+                                    "name": "Off",
+                                    "name_localizations": {
+                                        "ko": "꺼짐"
+                                    },
+                                    "value": 0
+                                },
+                                {
+                                    "name": "Track",
+                                    "name_localizations": {
+                                        "ko": "한개반복"
+                                    },
+                                    "value": 1
+                                },
+                                {
+                                    "name": "Queue",
+                                    "name_localizations": {
+                                        "ko": "전체반복"
+                                    },
+                                    "value": 2
+                                },
+                                {
+                                    "name": "Autoplay",
+                                    "name_localizations": {
+                                        "ko": "자동재생"
+                                    },
+                                    "value": 3
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         }

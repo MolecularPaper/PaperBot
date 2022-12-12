@@ -1,4 +1,4 @@
-import { QueryType, Player } from "discord-player";
+import { QueueRepeatMode , Player } from "discord-player";
 import { MoudleBase } from "./moudleBase.mjs";
 import { EmbedBuilder } from "discord.js";
 import { format } from "../System/utility.mjs";
@@ -7,11 +7,12 @@ export class Music extends MoudleBase{
     constructor(client, interaction){
         super(client, interaction);
         this.player = new Player(client);
+        this.isPaused = false;
     }
 
     async entry(interaction){
         if(!interaction.member.voice.channel){
-            await interaction.reply("먼저 음성 채널에 연결해주신뒤, 명령어를 입력해주세요.");
+            await interaction.reply("⚠️ | 먼저 음성 채널에 연결해주신뒤, 명령어를 입력해주세요.");
             return
         }
 
@@ -32,6 +33,8 @@ export class Music extends MoudleBase{
             this.replay(interaction, queue);
         } else if(interaction.options.getSubcommand() == "shuffle"){
             this.shuffle(interaction, queue);
+        } else if(interaction.options.getSubcommand() == "loop"){
+            this.loop(interaction, queue);
         }
     }
 
@@ -71,7 +74,7 @@ export class Music extends MoudleBase{
         } else if (result.tracks.length > 1){
             embed = await this.addPlaylist(embed, queue, result, url);
         } else{
-            await interaction.reply("결과없음, 링크를 확인해주세요.");
+            await interaction.reply("⚠️ | 결과없음, 링크를 확인해주세요.");
             return;
         }
         
@@ -81,7 +84,7 @@ export class Music extends MoudleBase{
 
     async quit(interaction, queue){
         if(!queue){
-            await interaction.reply("재생목록이 존재하지 않습니다.");
+            await interaction.reply("❌ | 재생되고 있는 노래가 없습니다.");
             return;
         }
 
@@ -92,15 +95,15 @@ export class Music extends MoudleBase{
     // 재생목록 출력
     async showQueue(interaction, queue){
         if(!queue || !queue.playing){
-            await interaction.reply("재생목록이 존재하지 않습니다.");
+            await interaction.reply("❌ | 재생되고 있는 노래가 없습니다.");
             return;
         }
 
         const totalPages = Math.ceil(queue.tracks.length / 10) || 1;
-        const page = (interaction.options.getNumber("page") || 1) - 1;
+        const page = (interaction.options.getInteger("page") || 1) - 1;
 
         if(page > totalPages){
-            await interaction.reply("없는 페이지 번호입니다.");
+            await interaction.reply("❌ | 없는 페이지 번호입니다.");
             return;
         }
 
@@ -125,11 +128,11 @@ export class Music extends MoudleBase{
     // 노래 스킵
     async skip(interaction, queue){
         if(!queue){
-            await interaction.reply("재생목록이 존재하지 않습니다.");
+            await interaction.reply("❌ | 재생되고 있는 노래가 없습니다.");
             return;
         }
 
-        index = interaction.options.getNumber("index");
+        index = interaction.options.getInteger("index");
         if(index == !null){
             queue.skipTo(index);
         }
@@ -139,49 +142,61 @@ export class Music extends MoudleBase{
         }
 
         const song = queue.tracks[index];
-        await interaction.reply(format("다음 곡을 넘김 - {0} - {1} <{2}>", song.title, song.duration, song.requestedBy.id))
+        await interaction.reply(format("ℹ️ | 다음 곡을 넘김 - {0} - {1} <{2}>", song.title, song.duration, song.requestedBy.id))
     }
 
     // 재생목록 셔플
     async shuffle(interaction, queue){
         if(!queue){
-            await interaction.reply("재생목록이 존재하지 않습니다.");
+            await interaction.reply("❌ | 재생되고 있는 노래가 없습니다.");
             return;
         }
 
         queue.shuffle();
-        await interaction.reply("재생목록을 섞었습니다.");
+        await interaction.reply("♻️ | 재생목록을 섞었습니다.");
     }
 
     // 노래 일시정지
     async pasue(interaction, queue){
         if(!queue){
-            await interaction.reply("재생목록이 존재하지 않습니다.");
+            await interaction.reply("❌ | 재생되고 있는 노래가 없습니다.");
             return;
         }
 
-        if(queue.paused){
-            await interaction.reply("이미 재생이 중지되어 있습니다.");
+        if(this.isPaused){
+            await interaction.reply("⚠️ | 이미 재생이 중지되어 있습니다.");
             return;
         }
 
-        queue.setPaused(true);
-        await interaction.reply("노래 재생을 일시정지 했습니다.");
+        this.isPaused = queue.setPaused(true);
+        await interaction.reply("ℹ️ | 노래 재생을 일시정지 했습니다.");
     }
 
     // 노래 일시정지 해제
     async replay(interaction, queue){
         if(!queue){
-            await interaction.reply("재생목록이 존재하지 않습니다.");
+            await interaction.reply("❌ | 재생되고 있는 노래가 없습니다.");
             return;
         }
 
-        if(!queue.paused){
-            await interaction.reply("이미 재생중입니다.");
+        if(!this.isPaused){
+            await interaction.reply("⚠️ | 이미 재생중입니다.");
             return;
         }
 
-        queue.setPaused(false);
-        await interaction.reply("노래를 다시 재생합니다.");
+        this.isPaused = queue.setPaused(false);
+        await interaction.reply("ℹ️ | 노래를 다시 재생합니다.");
+    }
+
+    async loop(interaction, queue){
+        if(!queue){
+            await interaction.reply("❌ | 재생되고 있는 노래가 없습니다.");
+            return;
+        }
+
+        const loopMode = interaction.options.getInteger("mode");
+        const success = queue.setRepeatMode(loopMode);
+        const mode = QueueRepeatMode[loopMode] === QueueRepeatMode.TRACK ? '🔂' : loopMode === QueueRepeatMode.QUEUE ? '🔁' : '▶';
+        interaction.reply(success ? `${mode} | 반복 상태가 변경되었습니다.` : '❌ | 반복 상태를 변경하지 못했습니다.')
     }
 }
