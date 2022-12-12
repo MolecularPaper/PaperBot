@@ -8,6 +8,7 @@ export class Music extends MoudleBase{
         super(client, interaction);
         this.player = new Player(client);
         this.isPaused = false;
+        this.queue = null;
     }
 
     async entry(interaction){
@@ -17,7 +18,14 @@ export class Music extends MoudleBase{
         }
 
         let embed = new EmbedBuilder().setTitle("노래");
-        const queue = this.player.createQueue(interaction.guild);
+        const queue = await this.player.createQueue(interaction.guild, {
+            ytdlOptions: {
+                filter: 'audioonly',
+                highWaterMark: 1 << 30,
+                dlChunkSize: 0,
+            },
+            metadata: interaction.channel
+        });
 
         if(interaction.options.getSubcommand() == "play"){
             this.playLink(interaction, queue, embed)
@@ -29,8 +37,8 @@ export class Music extends MoudleBase{
             this.skip(interaction, queue);
         } else if(interaction.options.getSubcommand() == "pause"){
             this.pasue(interaction, queue);
-        } else if(interaction.options.getSubcommand() == "replay"){
-            this.replay(interaction, queue);
+        } else if(interaction.options.getSubcommand() == "resume"){
+            this.resume(interaction, queue);
         } else if(interaction.options.getSubcommand() == "shuffle"){
             this.shuffle(interaction, queue);
         } else if(interaction.options.getSubcommand() == "loop"){
@@ -88,7 +96,7 @@ export class Music extends MoudleBase{
             return;
         }
 
-        await interaction.reply("노래를 멈추고 재생목록을 삭제한뒤 음성채널을 나갑니다.")
+        await interaction.reply("노래 재생을 종료합니다.")
         queue.destroy(true);
     }
     
@@ -108,14 +116,15 @@ export class Music extends MoudleBase{
         }
 
         const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
-            return format("[{0}] {1} - {2}", page * 10 + i + 1, song.title, song.duration)
+            const title = song.title.length > 30 ? format("{0}...", song.title.substr(0, 25)) : song.title;
+            return format("[{0}] {1} - {2}", page * 10 + i + 1, title, song.duration)
         });
 
         const currentSong = queue.current;
 
         const embed = new EmbedBuilder().setTitle("재생목록").setDescription("**현재 재생중**\n" + 
         (currentSong ? format("{0} - {1}", currentSong.title, currentSong.duration) : "재생중인 곡 없음") +
-        '\n\n**재생목록**\n' + queueString
+        '\n\n**재생목록**\n' + queueString.join("\n")
         )
         .setFooter({
             text: format("페이지 {0} / {1}", page + 1, totalPages)
@@ -132,17 +141,18 @@ export class Music extends MoudleBase{
             return;
         }
 
-        index = interaction.options.getInteger("index");
-        if(index == !null){
-            queue.skipTo(index);
+        let index = interaction.options.getInteger("index");
+        if(index != null){
+            await queue.skipTo(index);
         }
         else{
-            queue.skip();
+            await queue.skip();
             index = 0;
         }
 
         const song = queue.tracks[index];
-        await interaction.reply(format("ℹ️ | 다음 곡을 넘김 - {0} - {1} <{2}>", song.title, song.duration, song.requestedBy.id))
+        const embed = new EmbedBuilder().setTitle("노래 건너뜀").setDescription(format("{0} - {1}", song.title, song.duration))
+        await interaction.reply({embeds:[embed]})
     }
 
     // 재생목록 셔플
@@ -173,7 +183,7 @@ export class Music extends MoudleBase{
     }
 
     // 노래 일시정지 해제
-    async replay(interaction, queue){
+    async resume(interaction, queue){
         if(!queue){
             await interaction.reply("❌ | 재생되고 있는 노래가 없습니다.");
             return;

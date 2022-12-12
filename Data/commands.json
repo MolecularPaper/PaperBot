@@ -152,9 +152,9 @@
                     "type" : 1
                 },
                 {
-                    "name": "replay",
+                    "name": "resume",
                     "name_localizations": {
-                        "ko": "다시재생"
+                        "ko": "재개"
                     },
                     "description":"Play the paused song again.",
                     "description_localizations": {
