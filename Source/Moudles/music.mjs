@@ -15,14 +15,24 @@ export class Music extends MoudleBase{
             return
         }
 
-        let embed = new EmbedBuilder().setTitle("노래")
+        let embed = new EmbedBuilder().setTitle("노래");
         if(interaction.options.getSubcommand() == "play"){
             this.playLink(interaction, embed)
         } else if (interaction.options.getSubcommand() == "playlist"){
             this.showQueue(interaction);
-        } else if (interaction.options.getSubcommand() == "playlist"){
-
+        } else if (interaction.options.getSubcommand() == "skip"){
+            this.skip(interaction);
         }
+        else if(interaction.options.getSubcommand() == "pause"){
+            this.pasue(interaction);
+        }
+        else if(interaction.options.getSubcommand() == "replay"){
+            this.replay(interaction);
+        }
+        else if(interaction.options.getSubcommand() == "shuffle"){
+            this.shuffle(interaction);
+        }
+        
     }
 
     async addTrack(embed, queue, result){
@@ -35,12 +45,13 @@ export class Music extends MoudleBase{
         return embed
     }
 
-    async addPlaylist(embed, queue, result){
-        await queue.addTracks(result.tracks);
+    async addPlaylist(embed, queue, result, url){
+        const tracks = result.tracks;
+        await queue.addTracks(tracks);
         embed
-            .setDescription(format("{0} 개의 곡이 재생목록에 추가되었습니다. {1}", song.tracks, song.url))
-            .setThumbnail(song.thumbnail)
-            .setFooter({ text : format("길이: {0}", song.duration) });
+            .setDescription(format("{0} 개의 곡이 재생목록에 추가되었습니다. {1}", tracks.length, url))
+            .setThumbnail(tracks[0].thumbnail)
+            .setFooter({ text : format("길이: {0}", tracks.duration) });
         return embed
     }
 
@@ -56,7 +67,7 @@ export class Music extends MoudleBase{
         if (result.tracks.length === 1){
             embed = await this.addTrack(embed, queue, result);
         } else if (result.tracks.length > 1){
-            embed = await this.addPlaylist(embed, queue, result);
+            embed = await this.addPlaylist(embed, queue, result, url);
         } else{
             await interaction.reply("결과없음, 링크를 확인해주세요.");
             return;
@@ -115,8 +126,35 @@ export class Music extends MoudleBase{
             queue.skip();
             index = 0;
         }
-        
+
         const song = queue.tracks[index];
-        interaction.reply(format("다음 곡을 넘김 - {0} - {1} <{2}>", song.title, song.duration, song.requestedBy.id))
+        await interaction.reply(format("다음 곡을 넘김 - {0} - {1} <{2}>", song.title, song.duration, song.requestedBy.id))
+    }
+
+    async shuffle(interaction){
+        this.player.createQueue(interaction.guild).shuffle();
+        await interaction.reply("재생목록을 셔플했습니다.");
+    }
+
+    async pasue(interaction){
+        const queue = this.player.getQueue(interaction.guild);
+
+        if(queue.paused){
+            await interaction.replay("이미 재생이 중지되어 있습니다.");
+            return;
+        }
+
+        queue.pasue();
+    }
+
+    async replay(interaction){
+        const queue = this.player.getQueue(interaction.guild);
+
+        if(!queue.paused){
+            await interaction.replay("이미 재생중입니다.");
+            return;
+        }
+
+        queue.resume();
     }
 }
