@@ -8,7 +8,13 @@ export class MoudleBase{
 
     async excute (interaction) {
         if (interaction.commandName === this.commandName) {
-            await this.entry(interaction);
+            try{
+                await this.entry(interaction);
+            }
+            catch (error){
+                console.log(error);
+                await interaction.reply("❗ | 오류가 발생했습니다. 다시한번 시도해주세요.")
+            }
         }
     }
 

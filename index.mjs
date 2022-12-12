@@ -18,12 +18,7 @@ client.on('ready', () => { console.log(`Logged in as ${client.user.tag}!`); });
 client.on('interactionCreate', async interaction => {
     if (!interaction.isChatInputCommand()) return;
     moudles.forEach(async moudle => {
-        try{
-            await moudle.excute(interaction, client);
-        }
-        catch (error){
-            console.log(error);
-        }
+        await moudle.excute(interaction, client);
     });
 });
 
