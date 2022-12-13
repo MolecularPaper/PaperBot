@@ -1,6 +1,5 @@
 import { MoudleBase } from "./moudleBase.mjs";
 import { Configuration, OpenAIApi } from "openai";
-import { config } from 'dotenv';
 import { readFileSync } from 'fs'
 
 export class ChatBot extends MoudleBase{
@@ -11,7 +10,6 @@ export class ChatBot extends MoudleBase{
     }
 
     async setOpenAI(){
-        config({path: './Data/config.env'});
         const configuration = new Configuration({
             organization: process.env.OPENAI_ORGANIZATION,
             apiKey: process.env.OPENAI_API_KEY
