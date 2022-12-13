@@ -1,10 +1,11 @@
 {
   "name": "discordpaperbot",
   "version": "1.0.0",
+  "type": "module",
   "description": "discord paper bot",
-  "main": "index.mjs",
+  "main": "index.js",
   "scripts": {
-    "test": "node -r dotenv/config index.mjs dotenv_config_path=./Data/.env"
+    "test": "node -r dotenv/config index.js dotenv_config_path=./Data/.env"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "discord-player": "^5.3.1",
     "discord.js": "^14.4.0",
     "dotenv": "^16.0.2",
+    "express": "^4.18.2",
     "ffmpeg-static": "^5.1.0",
     "node-opus": "^0.3.3",
     "openai": "^3.1.0",
