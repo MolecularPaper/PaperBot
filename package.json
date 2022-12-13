@@ -2,8 +2,9 @@
   "name": "discordpaperbot",
   "version": "1.0.0",
   "description": "discord paper bot",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
+    "start": "node index.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
