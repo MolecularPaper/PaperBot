@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
 const { json } = require("express");
-const { readFileSync, writeFileSync } = require("fs")
+const { readFileSync, writeFileSync, existsSync } = require("fs")
 const path = require("path");
 
 
@@ -11,7 +11,13 @@ module.exports = {
 		.setNameLocalization("ko", "등록")
 		.setDescriptionLocalization("ko", "유저등록"),
 	async execute(client, interaction) {
+        //Directory 존재 여부 체크
         const dataPath = path.join(__dirname, "../../Data/userData.json")
+
+        if(!existsSync(dataPath)){
+            writeFileSync(dataPath, "{\n}");      
+        }
+
         const dataFile = readFileSync(dataPath, 'utf-8')
         const userData = JSON.parse(dataFile);
         const userTag = interaction.member.user.tag;
