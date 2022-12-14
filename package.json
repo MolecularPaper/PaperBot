@@ -1,7 +1,7 @@
 {
   "name": "discordpaperbot",
   "version": "1.0.0",
-  "type": "module",
+  "type": "commonjs",
   "description": "discord paper bot",
   "main": "index.js",
   "scripts": {

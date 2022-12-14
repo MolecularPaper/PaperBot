@@ -1,7 +1,7 @@
-import { startUp } from './Source/System/botStartUp.mjs';
-import express from 'express'
+const startUp = require('./Source/System/botStartUp.js');
+const express = require('express');
 
 const app = express();
 app.listen(process.env.PORT || 5000)
 
-startUp();
+startUp.startUp();
