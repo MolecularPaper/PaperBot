@@ -10,7 +10,7 @@ module.exports = {
         .setDescription("Paper recommends meals.")
         .setNameLocalization("ko", "식사추천")
         .setDescriptionLocalization("ko", "식사를 추천해줍니다.")
-        .addNumberOption((option) => 
+        .addIntegerOption((option) => 
             option.setName("count")
             .setDescription("Meal recommend count")
             .setNameLocalization("ko", "개수")

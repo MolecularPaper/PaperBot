@@ -1,19 +1,22 @@
-const { SlashCommandBuilder } = require("@discordjs/builders")
-const { MessageEmbed } = require("discord.js")
+const { SlashCommandBuilder, EmbedBuilder } = require("@discordjs/builders")
 
 module.exports = {
-	data: new SlashCommandBuilder().setName("skip").setDescription("Skips the current song"),
+	data: new SlashCommandBuilder()
+        .setName("skip")
+        .setDescription("Skips the current song")
+        .setNameLocalization("ko", "다음곡")
+        .setDescriptionLocalization("ko", "재생중인 노래를 건너뜁니다."),
     async execute(client, interaction){
         const queue = client.player.getQueue(interaction.guildId)
 
-		if (!queue) return await interaction.editReply("There are no songs in the queue")
+		if (!queue) return await interaction.reply("재생목록에 추가된 노래가 없습니다.")
 
         const currentSong = queue.current
 
 		queue.skip()
-        await interaction.editReply({
+        await interaction.reply({
             embeds: [
-                new MessageEmbed().setDescription(`${currentSong.title} has been skipped!`).setThumbnail(currentSong.thumbnail)
+                new EmbedBuilder().setDescription(`${currentSong.title} 를 건너뛰었습니다.`).setThumbnail(currentSong.thumbnail)
             ]
         })
 	}
