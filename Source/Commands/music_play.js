@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("@discordjs/builders")
 const { format } = require("../System/utility")
 const { QueryType } = require("discord-player")
+const { getSongInfoEmbed } = require("./music_playerinfo.js")
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -37,7 +38,7 @@ module.exports = {
 	async execute(client, interaction) {
         if (!interaction.member.voice.channel) return await interaction.reply("먼저 음성채널에 접속해주세요.");
 
-		const queue = await client.player.createQueue(interaction.guild)
+		const queue = await client.player.createQueue(interaction.guild, { metadata: interaction })
 		if (!queue.connection) await queue.connect(interaction.member.voice.channel)
 
 		let embed = new EmbedBuilder();
@@ -72,9 +73,7 @@ module.exports = {
                 .setFooter({ text: `Duration: ${song.duration}`})
 		}
         if (!queue.playing) await queue.play()
-        await interaction.reply({
-            embeds: [embed]
-        })
+        await interaction.reply({ embeds: [embed]})
     }
 }
 

@@ -2,6 +2,7 @@ const { Player } = require('discord-player');
 const { Client, GatewayIntentBits } = require('discord.js');
 const { registerCommand } = require("./commandBuild.js")
 const { registerEvent } = require("./botEvents.js")
+const { registerPlayerEvent } = require('./botPlayerEvent.js')
 
 module.exports = {
     startUp(){
@@ -13,6 +14,7 @@ module.exports = {
         });
         
         client.player = new Player(client, {
+            leaveOnEnd: false,
             ytdlOptions: {
                 filter: 'audioonly',
                 highWaterMark: 1 << 30,
@@ -22,6 +24,7 @@ module.exports = {
 
         registerCommand(client);
         registerEvent(client);
+        registerPlayerEvent(client.player);
 
         client.login(process.env.DISCORD_BOT_TOKEN);
     }
