@@ -1,4 +1,4 @@
-const { getSongInfoEmbed } = require("../Commands/music_playerinfo")
+const { getSongInfoEmbed } = require("../Commands/Music/music_playerinfo.js")
 
 module.exports.registerPlayerEvent = (player) => {
     player.on("error", (queue, error) => {
@@ -11,7 +11,6 @@ module.exports.registerPlayerEvent = (player) => {
 
     player.on("trackStart", (queue, track) => {
         const embed = getSongInfoEmbed(queue, track);
-        console.log(queue);
         queue.metadata.channel.send({embeds:[embed]});
     });
 

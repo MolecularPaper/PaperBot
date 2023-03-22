@@ -1,0 +1,3 @@
+*.pyc
+*.pprof
+/ckpt/

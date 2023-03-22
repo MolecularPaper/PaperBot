@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { readFileSync } = require('fs');
-const { randomRange, format } = require("../System/utility.js");
+const { randomRange, format } = require("../../System/utility.js");
 
 let mealList = readFileSync("./Data/menuList.txt", "utf-8").split(/\r?\n/);
 
@@ -29,7 +29,7 @@ module.exports = {
         }
 
         const embed = new EmbedBuilder().setColor(0x00ff00).setTitle("추천메뉴")
-        await interaction.reply({embeds: [embed.setDescription(description)]});
+        await interaction.editReply({embeds: [embed.setDescription(description)]});
     }
 }
 

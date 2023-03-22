@@ -9,12 +9,12 @@ module.exports = {
     async execute(client, interaction){
         const queue = client.player.getQueue(interaction.guildId)
 
-		if (!queue) return await interaction.reply("재생목록에 추가된 노래가 없습니다.")
+		if (!queue) return await interaction.editReply("재생목록에 추가된 노래가 없습니다.")
 
         const currentSong = queue.current
 
 		queue.skip()
-        await interaction.reply({
+        await interaction.editReply({
             embeds: [
                 new EmbedBuilder().setDescription(`${currentSong.title} 를 건너뛰었습니다.`).setThumbnail(currentSong.thumbnail)
             ]

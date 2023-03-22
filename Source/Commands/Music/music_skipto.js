@@ -16,13 +16,13 @@ module.exports = {
     async execute(client, interaction){
         const queue = client.player.getQueue(interaction.guildId)
 
-		if (!queue) return await interaction.reply("재생목록에 추가된 노래가 없습니다.")
+		if (!queue) return await interaction.editReply("재생목록에 추가된 노래가 없습니다.")
 
         const trackNum = interaction.options.getNumber("tracknumber")
         if (trackNum > queue.tracks.length)
-            return await interaction.reply("유효하지 않는 곡 번호입니다.")
+            return await interaction.editReply("유효하지 않는 곡 번호입니다.")
 		queue.skipTo(trackNum - 1)
 
-        await interaction.reply(`재생목록의 ${trackNum}번 곡을 건너뜁니다.`)
+        await interaction.editReply(`재생목록의 ${trackNum}번 곡을 건너뜁니다.`)
 	}
 }

@@ -2,17 +2,33 @@ const { REST, Routes, Collection } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
 
+function getCommandFiles(directory){
+    const files = fs.readdirSync(directory, {withFileTypes:true});
+    const commandFiles = []
+
+    files.forEach(file => {
+        if(file.isDirectory()){
+            commandFiles.push.apply(commandFiles, getCommandFiles(path.join(directory, file.name)))
+        }
+        else {
+            commandFiles.push(path.join(directory, file.name))
+        }
+    });
+
+    return commandFiles
+}
+
 // and deploy your commands!
 module.exports = {
     registerCommand: async function(client){
         client.commands = new Collection();
-    
+        
         const commandsPath = path.join(__dirname, '../Commands');
-        const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
-
+        const commandFiles = getCommandFiles(commandsPath);
+        const commands = [];
+        
         for (const file of commandFiles) {
-            const filePath = path.join(commandsPath, file);
-            const command = require(filePath);
+            const command = require(file);
 
             // Set a new item in the Collection with the key as the command name and the value as the exported module
             if ('data' in command && 'execute' in command) {
@@ -20,12 +36,7 @@ module.exports = {
             } else {
                 console.log(`[WARNING] The command at ${filePath} is missing a required "data" or "execute" property.`);
             }
-        }
 
-        const commands = [];
-        // Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
-        for (const file of commandFiles) {
-            const command = require(path.join(commandsPath, file));
             commands.push(command.data.toJSON());
         }
 

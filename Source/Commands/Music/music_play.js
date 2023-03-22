@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("@discordjs/builders")
-const { format } = require("../System/utility")
+const { format } = require("../../System/utility")
 const { QueryType } = require("discord-player")
 const { getSongInfoEmbed } = require("./music_playerinfo.js")
 
@@ -36,7 +36,7 @@ module.exports = {
 				)
 		),
 	async execute(client, interaction) {
-        if (!interaction.member.voice.channel) return await interaction.reply("먼저 음성채널에 접속해주세요.");
+        if (!interaction.member.voice.channel) return await interaction.editReply("먼저 음성채널에 접속해주세요.");
 
 		const queue = await client.player.createQueue(interaction.guild, { metadata: interaction })
 		if (!queue.connection) await queue.connect(interaction.member.voice.channel)
@@ -54,7 +54,7 @@ module.exports = {
             } else if (result.tracks.length > 1){
                 embed = await addPlaylist(embed, queue, result, url);
             } else{
-                return await interaction.reply("⚠️ | 결과없음, 링크를 확인해주세요.");
+                return await interaction.editReply("⚠️ | 결과없음, 링크를 확인해주세요.");
             }
 		} else if (interaction.options.getSubcommand() === "search") {
             let url = interaction.options.getString("searchterms")
@@ -63,7 +63,7 @@ module.exports = {
                 searchEngine: QueryType.AUTO
             })
 
-            if (result.tracks.length === 0) return await interaction.reply("⚠️ | 검색 결과가 없습니다.")
+            if (result.tracks.length === 0) return await interaction.editReply("⚠️ | 검색 결과가 없습니다.")
             
             const song = result.tracks[0]
             await queue.addTrack(song)
@@ -73,7 +73,7 @@ module.exports = {
                 .setFooter({ text: `Duration: ${song.duration}`})
 		}
         if (!queue.playing) await queue.play()
-        await interaction.reply({ embeds: [embed]})
+        await interaction.editReply({ embeds: [embed]})
     }
 }
 

@@ -1,5 +1,5 @@
 const { Player } = require('discord-player');
-const { Client, GatewayIntentBits } = require('discord.js');
+const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const { registerCommand } = require("./commandBuild.js")
 const { registerEvent } = require("./botEvents.js")
 const { registerPlayerEvent } = require('./botPlayerEvent.js')
@@ -9,7 +9,14 @@ module.exports = {
         const client = new Client({
             intents: [
                 GatewayIntentBits.Guilds,
-                GatewayIntentBits.GuildVoiceStates
+                GatewayIntentBits.GuildBans,
+                GatewayIntentBits.GuildMessages,
+                GatewayIntentBits.DirectMessages,
+                GatewayIntentBits.MessageContent,
+                GatewayIntentBits.GuildVoiceStates,
+            ],
+            partials:[
+                Partials.Channel
             ]
         });
         

@@ -16,13 +16,13 @@ module.exports = {
     async execute(client, interaction){
         {
             const queue = client.player.getQueue(interaction.guildId)
-            if (!queue || !queue.playing) return await interaction.reply("재생목록에 추가된 노래가 없습니다.")
+            if (!queue || !queue.playing) return await interaction.editReply("재생목록에 추가된 노래가 없습니다.")
     
             const totalPages = Math.ceil(queue.tracks.length / 10) || 1
             const page = (interaction.options.getNumber("page") || 1) - 1
     
             if (page > totalPages) {
-                return await interaction.reply(`존재하지 않는 페이지입니다. ${totalPages} 가 마지막 페이지입니다.`)
+                return await interaction.editReply(`존재하지 않는 페이지입니다. ${totalPages} 가 마지막 페이지입니다.`)
             }
             
             const queueString = queue.tracks.slice(page * 10, page * 10 + 10).map((song, i) => {
@@ -31,7 +31,7 @@ module.exports = {
     
             const currentSong = queue.current
     
-            await interaction.reply({
+            await interaction.editReply({
                 embeds: [
                     new EmbedBuilder()
                         .setDescription(`**현재 재생중**\n` + 

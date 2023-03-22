@@ -10,11 +10,11 @@ module.exports = {
 		const queue = client.player.getQueue(interaction.guildId)
 
 		if (!queue) { 
-			await interaction.reply("재생목록에 추가된 노래가 없습니다.")
+			await interaction.editReply("재생목록에 추가된 노래가 없습니다.")
 			return;
 		}
 
 		queue.setPaused(true)
-        await interaction.reply("노래가 일시중지 되었습니다. `/재개` 명령어를 사용하면 노래가 다시 재생됩니다.")
+        await interaction.editReply("노래가 일시중지 되었습니다. `/재개` 명령어를 사용하면 노래가 다시 재생됩니다.")
 	},
 }

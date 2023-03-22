@@ -5,8 +5,6 @@ module.exports.registerEvent = (client) => {
 
     client.on('interactionCreate', async interaction => {
         if (!interaction.isChatInputCommand()) return;
-        console.log(interaction);
-
         const command = interaction.client.commands.get(interaction.commandName);
         if (!command) {
             console.error(`No command matching ${interaction.commandName} was found.`);
@@ -14,10 +12,11 @@ module.exports.registerEvent = (client) => {
         }
 
         try {
+            interaction.deferReply();
             await command.execute(client, interaction);
         } catch (error) {
             console.error(error);
-            await interaction.reply({ content: "명령어를 실행하는 도중 오류가 발생했습니다.", ephemeral: true });
+            await interaction.editReply({ content: "명령어를 실행하는 도중 오류가 발생했습니다.", ephemeral: true });
         }
     });
 }

@@ -18,9 +18,9 @@ module.exports = {
 	async execute(client, interaction){
 		const queue = client.player.getQueue(interaction.guildId)
 
-		if (!queue) return await interaction.reply("재생목록에 추가된 노래가 없습니다.");
+		if (!queue) return await interaction.editReply("재생목록에 추가된 노래가 없습니다.");
 
 		embed = getSongInfoEmbed(queue, queue.current)
-		await interaction.reply({embeds:[embed]})
+		await interaction.editReply({embeds:[embed]})
 	},
 }

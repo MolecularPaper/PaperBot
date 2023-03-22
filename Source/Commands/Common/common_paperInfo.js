@@ -13,6 +13,6 @@ module.exports ={
             .setTitle("페이퍼 정보")
             .setDescription(readFileSync("./Data/paperInfo.txt", "utf-8"));
         
-        interaction.reply({embeds:[embed]});
+        interaction.editReply({embeds:[embed]});
     }
 }
