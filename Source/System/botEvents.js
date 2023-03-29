@@ -4,7 +4,7 @@ module.exports.registerEvent = (client) => {
     });
 
     client.on('interactionCreate', async interaction => {
-        if (!interaction.isChatInputCommand()) return;
+        if (!interaction.isChatInputCommand() && !interaction.isStringSelectMenu()) return;
         const command = interaction.client.commands.get(interaction.commandName);
         if (!command) {
             console.error(`No command matching ${interaction.commandName} was found.`);
