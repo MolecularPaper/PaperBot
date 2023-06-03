@@ -28,6 +28,7 @@
     "express": "^4.18.2",
     "ffmpeg-static": "^5.1.0",
     "firebase": "^9.15.0",
-    "node-opus": "^0.3.3"
+    "node-opus": "^0.3.3",
+    "request": "^2.88.2"
   }
 }
