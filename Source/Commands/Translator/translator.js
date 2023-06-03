@@ -84,7 +84,7 @@ module.exports = {
                 await interaction.editReply({
                     embeds: [
                         new EmbedBuilder()
-                        .setTitle(`번역됨(${scrLangType} -> ${tarLangType})`)
+                        .setTitle(`번역됨 (${scrLangType} -> ${tarLangType})`)
                         .setDescription(translatedText)
                     ]
                 });

@@ -12,7 +12,7 @@ module.exports.registerEvent = (client) => {
         }
 
         try {
-            interaction.deferReply();
+            await interaction.deferReply();
             await command.execute(client, interaction);
         } catch (error) {
             console.error(error);
