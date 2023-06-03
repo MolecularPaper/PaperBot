@@ -1,3 +1,5 @@
+const { post } = require('request');
+
 module.exports = {
     randomRange(min, max) {
         return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -7,5 +9,24 @@ module.exports = {
         return arguments[0].replace (/\{(\d+)\}/g, function (match, index) {
             return args[index];
         });
+    },
+    sendPostJson(url, params, callback){
+        const options = {
+            uri: url,
+            method: 'POST',
+            body: params,
+            json:true
+        }
+        post(url, options, callback)
+    },
+    sendPostJson(url, params, headers, callback){
+        const options = {
+            uri: url,
+            method: 'POST',
+            body: params,
+            json:true,
+            headers:headers
+        }
+        post(url, options, callback)
     }
 }
