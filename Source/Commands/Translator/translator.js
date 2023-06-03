@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("@discordjs/builders")
 const { sendPostJson } = require("../../System/utility");
 
-async function getTextLanguage(text, callback){
+function getTextLanguage(interaction, text, callback){
     const url = "https://openapi.naver.com/v1/papago/detectLangs"
     sendPostJson(url, {
         "query":text
@@ -10,12 +10,19 @@ async function getTextLanguage(text, callback){
         "X-Naver-Client-Id": process.env.DETECTION_API_ID,
         "X-Naver-Client-Secret": process.env.DETECTION_API_KEY
     },
-    (err, responese, body)=> callback(body['langCode']))
+    (err, responese, body)=> {
+        if(body in "errorCode"){
+            interaction.editReply(body["errorMessage"]);
+            return;
+        }
+
+        callback(body['langCode']);
+    })
 }
 
-async function translationText(text, language, callback){
+function translationText(interaction, text, language, callback){
     const url = "https://openapi.naver.com/v1/papago/n2mt"
-    getTextLanguage(text, (source) => {
+    getTextLanguage(interaction, text, (source) => {
         sendPostJson(url, {
             "source": source,
             "target": language,
@@ -26,6 +33,11 @@ async function translationText(text, language, callback){
             "X-Naver-Client-Secret": process.env.TRANSLATOR_API_KEY
         },
         (err, responese, body) => {
+            if(body in "errorCode"){
+                interaction.editReply(body["errorMessage"]);
+                return;
+            }
+            
             const result = body["message"]["result"]
             callback(result["srcLangType"], result["tarLangType"], result["translatedText"])
         })
@@ -51,22 +63,35 @@ module.exports = {
             .addChoices(
                 { name: '한국어', value: "kr"},
                 { name: 'English', value: "en"},
-                { name: '日本語', value: "jp"},
-                { name: 'Русский', value: "ru"},
+                { name: '日本語', value: "ja"},
+                { name: '中文(简体)', value: "zh-CN"},
+                { name: '中文(繁體)', value: "zh-TW"},
+                { name: 'Tiếng-Việt', value: "vi"},
+                { name: 'بهاس إندونيسيا', value: "id"},
+                { name: 'ภาษาไทย', value: "th"},
                 { name: 'Deutsch', value: "de"},
+                { name: 'Русский', value: "ru"},
+                { name: 'español', value: "es"},
+                { name: 'Italiano', value: "it"},
+                { name: 'français', value: "fr"},
             )
         ),
 	async execute(client, interaction) {
         const language = interaction.options.getString("language");
         const text = interaction.options.getString("text");
-        translationText(text, language, async (scrLangType, tarLangType, translatedText) => {
-            await interaction.editReply({
-                embeds: [
-                    new EmbedBuilder()
-                    .setTitle(`번역됨(${scrLangType} -> ${tarLangType})`)
-                    .setDescription(translatedText)
-                ]
-            });
-        })
+        try{
+            translationText(interaction, text, language, async (scrLangType, tarLangType, translatedText) => {
+                await interaction.editReply({
+                    embeds: [
+                        new EmbedBuilder()
+                        .setTitle(`번역됨(${scrLangType} -> ${tarLangType})`)
+                        .setDescription(translatedText)
+                    ]
+                });
+            })
+        }
+        catch{
+            await interaction.editReply("번역도중 오류가 발생하였습니다!");
+        }
     }
 }
