@@ -11,7 +11,7 @@ function getTextLanguage(interaction, text, callback){
         "X-Naver-Client-Secret": process.env.DETECTION_API_KEY
     },
     (err, responese, body)=> {
-        if(body in "errorCode"){
+        if(body["errorCode"]){
             interaction.editReply(body["errorMessage"]);
             return;
         }
@@ -33,7 +33,7 @@ function translationText(interaction, text, language, callback){
             "X-Naver-Client-Secret": process.env.TRANSLATOR_API_KEY
         },
         (err, responese, body) => {
-            if(body in "errorCode"){
+            if(body["errorCode"]){
                 interaction.editReply(body["errorMessage"]);
                 return;
             }
