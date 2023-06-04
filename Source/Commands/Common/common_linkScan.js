@@ -6,10 +6,8 @@ const { sendPostJsonAsync } = require("../../System/utility.js");
 function scanUrl(urls){
     let unsafeUrls = []
     urls.forEach(async url => {
-        const body = await sendPostJsonAsync('https://api.lrl.kr/v4/url/check', { url: url})
-        
-        console.log(body);
-
+        const body = await sendPostJsonAsync('https://api.lrl.kr/v4/url/check', { "url": url})
+        if(body.message !== "SUCCESS") return null;
         if(body.result.safe == 0) unsafeUrls.push(`${url} - ${body.result.threat}`);
     });
 
@@ -44,11 +42,11 @@ module.exports ={
         if(!get(`${message.guild.id}/link-scan-active`)) return;
 
         const urls = collect(message.content);
-
+        
         if(urls == 0) return;
+        let unsafeUrls = scanUrl(urls);
 
-        let unsafeUrls = null;
-        try { unsafeUrls = scanUrl(urls); } catch { return; }
+        if(unsafeUrls === null) return;
 
         if(unsafeUrls.length == 0){
             await message.react('✅');

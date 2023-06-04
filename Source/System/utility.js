@@ -11,7 +11,7 @@ module.exports = {
             return args[index];
         });
     },
-    async sendPostJsonAsync(url, params, callback){
+    async sendPostJsonAsync(url, params){
         const options = {
             uri: url,
             method: 'POST',
