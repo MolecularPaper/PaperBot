@@ -1,6 +1,18 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 const { readFileSync } = require('fs');
-const { options } = require('./common_unitConversionType')
+
+const options = [
+    {
+        label: 'lb-kg',
+        description: 'Convert pounds to kg',
+        value: 'lb-kg',
+    },
+    {
+        label: 'kg-lb',
+        description: 'Convert kg to pounds',
+        value: 'kg-lb',
+    },
+]
 
 module.exports ={
     data: new SlashCommandBuilder()

@@ -2,7 +2,7 @@ const { Player } = require('discord-player');
 const { Client, GatewayIntentBits, Partials } = require('discord.js');
 const { registerCommand } = require("./commandBuild.js")
 const { registerEvent } = require("./botEvents.js")
-const { registerPlayerEvent } = require('./botPlayerEvent.js')
+const { registerPlayerEvent } = require('./botPlayerEvent.js');
 
 module.exports = {
     startUp(){
