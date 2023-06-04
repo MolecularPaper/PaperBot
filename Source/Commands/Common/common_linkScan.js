@@ -1,19 +1,16 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { get, set } = require('../../System/localVariable.js');
 const { collect } = require("../../System/clevisUrl.js");
-const { sendPostJson } = require("../../System/utility.js");
+const { sendPostJsonAsync } = require("../../System/utility.js");
 
 function scanUrl(urls){
     let unsafeUrls = []
-    urls.forEach(url => {
-        sendPostJson('https://api.lrl.kr/v4/url/check', { url: url},
-        async function (err, response, body) {
-            if(body.message !== "SUCCESS") throw "Error"
+    urls.forEach(async url => {
+        const body = await sendPostJsonAsync('https://api.lrl.kr/v4/url/check', { url: url})
+        
+        console.log(body);
 
-            result = body.result;      
-
-            if(result.safe == 0) unsafeUrls.push(`${url} - ${result.threat}`);
-        });
+        if(body.result.safe == 0) unsafeUrls.push(`${url} - ${body.result.threat}`);
     });
 
     return unsafeUrls;

@@ -1,4 +1,5 @@
 const { post } = require('request');
+const fetch = require('node-fetch')
 
 module.exports = {
     randomRange(min, max) {
@@ -9,6 +10,21 @@ module.exports = {
         return arguments[0].replace (/\{(\d+)\}/g, function (match, index) {
             return args[index];
         });
+    },
+    async sendPostJsonAsync(url, params, callback){
+        const options = {
+            uri: url,
+            method: 'POST',
+            body: params,
+            json:true
+        }
+        try {
+            const fetchResponse = await fetch(url, options);
+            const data = await fetchResponse.json();
+            return data;
+        } catch (e) {
+            return e;
+        }  
     },
     sendPostJson(url, params, callback){
         const options = {
