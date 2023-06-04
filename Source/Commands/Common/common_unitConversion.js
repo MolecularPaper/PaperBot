@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder } = require("discord.js");
 const { readFileSync } = require('fs');
-const { options } = require('../../../Data/common_unitConversionType')
+const { options } = require('./common_unitConversionType')
 
 module.exports ={
     data: new SlashCommandBuilder()

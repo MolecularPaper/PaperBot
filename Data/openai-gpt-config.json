@@ -1,6 +1,0 @@
-{
-    "model": "text-davinci-003",
-    "prompt": "",
-    "max_tokens": 500,
-    "temperature": 0.8
-}
