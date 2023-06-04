@@ -29,10 +29,16 @@ function getNode(node, path, createNode=false){
 function get(path){
     if(variable == null) load();
 
-    const paths = path.split('/')
-    let node = getNode(variable, paths[0]);
-    for (var i = 1; i < paths.length; i++) {        
-        node = getNode(node, paths[i]);
+    let node = null;
+    try{
+        const paths = path.split('/')
+        node = getNode(variable, paths[0]);
+        for (var i = 1; i < paths.length; i++) {        
+            node = getNode(node, paths[i]);
+        }
+    }
+    catch{
+        return null
     }
 
     return node

@@ -1,4 +1,6 @@
-module.exports.onMessageCallbacks = []
+let onMessageCallbacks = []
+
+module.exports.onMessageCallbacks = onMessageCallbacks;
 module.exports.registerEvent = (client) => {
     client.on('ready', () => { 
         console.log(`PaperBot ready. Logged in as ${client.user?.tag}`); 
@@ -27,7 +29,5 @@ module.exports.registerEvent = (client) => {
         onMessageCallbacks.forEach(function(onMessage){
             onMessage(client, message);
         });
-
-        console.log(`Message from ${message.author.username}: ${message.content}`);
       });
 }
