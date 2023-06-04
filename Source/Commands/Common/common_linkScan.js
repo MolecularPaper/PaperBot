@@ -17,6 +17,6 @@ module.exports ={
         set(`${interaction.guild}/link-scan-active`, interaction.options.getBoolean("active"))
     },
     async onMessage(client, message){
-        
+        console.log(`guild: ${message.guild}\nmessage: ${message.user}`);
     }
 }
