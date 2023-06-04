@@ -1,16 +1,11 @@
-const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require("discord.js");
 const { get, set } = require('../../System/localVariable.js');
-const { collect } = require("../../System/clevisUrl.js");
 const { sendPostAsync } = require("../../System/utility.js");
 
 async function scanUrl(urls){
     let unsafeUrls = []
     for (var i = 0; i < urls.length; i++){
         const body = await sendPostAsync('https://api.lrl.kr/v4/url/check', { url: urls[i]})
-        
-        console.log(urls[i]);
-        console.log(body);
-
         if(body.message !== "SUCCESS") return null;
         if(body.result.safe == 0) unsafeUrls.push(`${urls[i]} - ${body.result.threat}`);
     }
@@ -31,6 +26,11 @@ module.exports ={
             .setDescriptionLocalization("ko", "활성화 여부")
             .setRequired(true)),
     async execute(client, interaction) {
+        // if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
+        //     await interaction.editReply("설정을 변경할 권한이 없습니다.");
+        //     return;
+        // }
+
         const active = interaction.options.getBoolean("active")
         set(`${interaction.guild.id}/link-scan-active`, active)
 
@@ -44,10 +44,10 @@ module.exports ={
     },
     async onMessage(client, message){
         if(!get(`${message.guild.id}/link-scan-active`)) return;
+        
+        const regex = new RegExp("\\b(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+        const urls = message.content.match(regex);
 
-        const urls = collect(message.content);
-        console.log(urls);
-                
         if(urls == 0) return;
         let unsafeUrls = await scanUrl(urls);
 
@@ -65,10 +65,10 @@ module.exports ={
         await message.channel.send({
             embeds: [
                 new EmbedBuilder()
+                .setColor(0xff0000)
                 .setTitle(`안전하지 않은 링크가 감지되었습니다.`)
                 .setDescription(description)
             ]
         });
-        console.log(urls);
     }
 }
