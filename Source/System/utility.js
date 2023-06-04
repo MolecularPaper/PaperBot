@@ -11,12 +11,11 @@ module.exports = {
             return args[index];
         });
     },
-    async sendPostJsonAsync(url, params){
+    async sendPostAsync(url, params){
         const options = {
             uri: url,
             method: 'POST',
             body: params,
-            json:true
         }
         try {
             const fetchResponse = await fetch(url, options);

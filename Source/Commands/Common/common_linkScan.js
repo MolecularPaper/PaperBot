@@ -1,15 +1,19 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { get, set } = require('../../System/localVariable.js');
 const { collect } = require("../../System/clevisUrl.js");
-const { sendPostJsonAsync } = require("../../System/utility.js");
+const { sendPostAsync } = require("../../System/utility.js");
 
-function scanUrl(urls){
+async function scanUrl(urls){
     let unsafeUrls = []
-    urls.forEach(async url => {
-        const body = await sendPostJsonAsync('https://api.lrl.kr/v4/url/check', { "url": url})
+    for (var i = 0; i < urls.length; i++){
+        const body = await sendPostAsync('https://api.lrl.kr/v4/url/check', { url: urls[i]})
+        
+        console.log(urls[i]);
+        console.log(body);
+
         if(body.message !== "SUCCESS") return null;
-        if(body.result.safe == 0) unsafeUrls.push(`${url} - ${body.result.threat}`);
-    });
+        if(body.result.safe == 0) unsafeUrls.push(`${urls[i]} - ${body.result.threat}`);
+    }
 
     return unsafeUrls;
 }
@@ -44,9 +48,9 @@ module.exports ={
         const urls = collect(message.content);
         
         if(urls == 0) return;
-        let unsafeUrls = scanUrl(urls);
+        let unsafeUrls = await scanUrl(urls);
 
-        if(unsafeUrls === null) return;
+        if(unsafeUrls == null) return;
 
         if(unsafeUrls.length == 0){
             await message.react('✅');
