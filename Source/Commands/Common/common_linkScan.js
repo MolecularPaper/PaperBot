@@ -26,10 +26,10 @@ module.exports ={
             .setDescriptionLocalization("ko", "활성화 여부")
             .setRequired(true)),
     async execute(client, interaction) {
-        // if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
-        //     await interaction.editReply("설정을 변경할 권한이 없습니다.");
-        //     return;
-        // }
+        if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
+            await interaction.editReply("설정을 변경할 권한이 없습니다.");
+            return;
+        }
 
         const active = interaction.options.getBoolean("active")
         set(`${interaction.guild.id}/link-scan-active`, active)
