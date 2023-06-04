@@ -1,6 +1,23 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { get, set } = require('../../System/localVariable.js');
 const { collect } = require("../../System/clevisUrl.js");
+const { sendPostJson } = require("../../System/utility.js");
+
+function scanUrl(urls){
+    let unsafeUrls = []
+    urls.forEach(url => {
+        sendPostJson('https://api.lrl.kr/v4/url/check', { url: url},
+        async function (err, response, body) {
+            if(body.message !== "SUCCESS") throw "Error"
+
+            result = body.result;      
+
+            if(result.safe == 0) unsafeUrls.push(`${url} - ${result.threat}`);
+        });
+    });
+
+    return unsafeUrls;
+}
 
 module.exports ={
     data: new SlashCommandBuilder()
@@ -30,7 +47,28 @@ module.exports ={
         if(!get(`${message.guild.id}/link-scan-active`)) return;
 
         const urls = collect(message.content);
-        
+
+        if(urls == 0) return;
+
+        let unsafeUrls = null;
+        try { unsafeUrls = scanUrl(urls); } catch { return; }
+
+        if(unsafeUrls.length == 0){
+            await message.react('✅');
+            return;
+        }
+
+        let description = ""
+        unsafeUrls.forEach(url => { description += url + "\n"});
+        description += "\n 다음 링크에는 접속하지 않는것을 권장드립니다."
+
+        await message.channel.send({
+            embeds: [
+                new EmbedBuilder()
+                .setTitle(`안전하지 않은 링크가 감지되었습니다.`)
+                .setDescription(description)
+            ]
+        });
         console.log(urls);
     }
 }
