@@ -46,7 +46,8 @@ module.exports ={
         if(!get(`${message.guild.id}/link-scan-active`)) return;
 
         const urls = collect(message.content);
-        
+        console.log(urls);
+                
         if(urls == 0) return;
         let unsafeUrls = await scanUrl(urls);
 

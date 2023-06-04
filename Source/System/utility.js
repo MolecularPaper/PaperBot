@@ -15,7 +15,7 @@ module.exports = {
         const options = {
             uri: url,
             method: 'POST',
-            body: params,
+            body: JSON.stringify(params),
         }
         try {
             const fetchResponse = await fetch(url, options);
