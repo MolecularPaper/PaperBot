@@ -39,7 +39,7 @@ module.exports ={
         const state = interaction.options.getNumber("active")
         
         if (state == 2) {
-            const active = get(`${message.guild.id}/link-scan-active`);
+            const active = get(`${interaction.guild.id}/link-scan-active`);
             interaction.editReply(`현재 링크 스캔이 ${active ? "활성화" : "비활성화"} 되어 있습니다.`);
             return;
         } 
