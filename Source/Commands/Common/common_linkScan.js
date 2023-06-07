@@ -31,11 +31,6 @@ module.exports ={
             )
             .setRequired(true)),
     async execute(client, interaction) {
-        if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
-            await interaction.editReply("설정을 변경할 권한이 없습니다.");
-            return;
-        }
-
         const state = interaction.options.getNumber("active")
         
         if (state == 2) {
@@ -44,11 +39,20 @@ module.exports ={
             return;
         } 
 
+        if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
+            await interaction.editReply("설정을 변경할 권한이 없습니다.");
+            return;
+        }
+
         set(`${interaction.guild.id}/link-scan-active`, state == 0);
         const embed = new EmbedBuilder().setTitle(`링크 스캔이 ${state == 0 ? "활성화" : "비활성화"}됨`);
         
         if (state == 0){
             embed.setDescription("메세지를 스캔후 메세지 안에 있는 링크가 안전할경우 ✅ 표시가 메세지에 추가되며, 링크가 안전하지 않을경우 경고 메세지가 전송됩니다.");
+        }
+
+        if (state == 1){
+            embed.setDescription("페이퍼가 더 이상 링크를 스캔하지 않습니다.");
         }
         
         await interaction.editReply({ embeds: [embed] });
