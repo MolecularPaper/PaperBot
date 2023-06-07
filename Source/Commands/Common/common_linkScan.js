@@ -19,11 +19,16 @@ module.exports ={
         .setDescription("Link virus scan on/off")
         .setNameLocalization("ko", "링크스캔")
         .setDescriptionLocalization("ko", "링크 검사를 활성화/비활성화 합니다.")
-        .addBooleanOption((option) => 
+        .addNumberOption((option) => 
             option.setName("active")
             .setDescription("Enable scanning or not")
             .setNameLocalization("ko", "활성화")
             .setDescriptionLocalization("ko", "활성화 여부")
+            .addChoices(
+                { name: '활성화', value: 0 },
+                { name: '비활성화', value: 1 },
+                { name: '확인', value: 2 }
+            )
             .setRequired(true)),
     async execute(client, interaction) {
         if(!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)){
@@ -31,12 +36,18 @@ module.exports ={
             return;
         }
 
-        const active = interaction.options.getBoolean("active")
-        set(`${interaction.guild.id}/link-scan-active`, active)
-
-        const embed = new EmbedBuilder().setTitle(`링크 스캔이 ${active ? "활성화" : "비활성화"}됨`);
+        const state = interaction.options.getNumber("active")
         
-        if (active){
+        if (state == 2) {
+            const active = get(`${message.guild.id}/link-scan-active`);
+            interaction.editReply(`현재 링크 스캔이 ${active ? "활성화" : "비활성화"} 되어 있습니다.`);
+            return;
+        } 
+
+        set(`${interaction.guild.id}/link-scan-active`, state == 0);
+        const embed = new EmbedBuilder().setTitle(`링크 스캔이 ${state == 0 ? "활성화" : "비활성화"}됨`);
+        
+        if (state == 0){
             embed.setDescription("메세지를 스캔후 메세지 안에 있는 링크가 안전할경우 ✅ 표시가 메세지에 추가되며, 링크가 안전하지 않을경우 경고 메세지가 전송됩니다.");
         }
         
