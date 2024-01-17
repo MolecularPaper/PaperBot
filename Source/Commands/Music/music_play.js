@@ -15,7 +15,7 @@ module.exports = {
 				.setDescription("Add song from link")
                 .setNameLocalization("ko", "링크")
                 .setDescriptionLocalization("ko", "링크에서 노래를 추가합니다.")
-				.addStringOption((option) => 
+				.addStringOption((option) =>
                     option.setName("url")
                     .setDescription("the song's url")
                     .setDescriptionLocalization("ko", "재생할 노래 또는 목록의 URL")
