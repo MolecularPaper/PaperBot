@@ -5,7 +5,8 @@
   "description": "discord paper bot",
   "main": "index.js",
   "scripts": {
-    "test": "node -r dotenv/config index.js dotenv_config_path=./.env"
+    "test": "node -r dotenv/config index.js dotenv_config_path=./.env",
+    "lostark": "node -r dotenv/config ./Source/Commands/Lostark/test.js dotenv_config_path=./.env"
   },
   "repository": {
     "type": "git",
@@ -31,6 +32,8 @@
     "node-fetch": "^2.6.11",
     "node-opus": "^0.3.3",
     "request": "^2.88.2",
+    "xhr2": "^0.2.1",
+    "xmlhttprequest": "^1.8.0",
     "ytdl-core": "^4.11.4"
   }
 }

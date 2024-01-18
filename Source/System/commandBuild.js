@@ -36,6 +36,7 @@ module.exports = {
                 client.commands.set(command.data.name, command);
             } else {
                 console.log(`[WARNING] The command at ${file} is missing a required "data" or "execute" property.`);
+                continue
             }
 
             if('onMessage' in command){
