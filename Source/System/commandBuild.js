@@ -1,6 +1,7 @@
 const { REST, Routes, Collection } = require('discord.js');
 const fs = require('node:fs');
 const path = require('node:path');
+
 const { onMessageCallbacks } = require('./botEvents');
 
 function getCommandFiles(directory){
@@ -31,16 +32,16 @@ module.exports = {
         for (const file of commandFiles) {
             const command = require(file);
 
+            if('onMessage' in command){
+                onMessageCallbacks.push(command.onMessage);
+            }
+
             // Set a new item in the Collection with the key as the command name and the value as the exported module
             if ('data' in command && 'execute' in command) {
                 client.commands.set(command.data.name, command);
             } else {
                 console.log(`[WARNING] The command at ${file} is missing a required "data" or "execute" property.`);
                 continue
-            }
-
-            if('onMessage' in command){
-                onMessageCallbacks.push(command.onMessage);
             }
 
             commands.push(command.data.toJSON());

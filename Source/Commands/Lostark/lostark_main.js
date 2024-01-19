@@ -3,7 +3,7 @@ const { searchCharacter } = require("./lostark_search_character")
 
 const XMLHttpRequest = require("xhr2");
 
-function requestAPI(client, interaction, callback, endpoint){
+function requestAPI(client, interaction, callback, endpoint, params=null){
     var xhr = new XMLHttpRequest();
     xhr.open("GET", encodeURI("https://developer-lostark.game.onstove.com/" + endpoint), true);
     xhr.setRequestHeader('accept', 'application/json');
@@ -11,13 +11,17 @@ function requestAPI(client, interaction, callback, endpoint){
     xhr.onreadystatechange = () => { };
     xhr.send();
 
-    xhr.onload = () => {
-        try{``
+    if(params != null){
+        const keys = Object.keys(params)
+        keys.forEach(key => xhr.setRequestHeader(key, params[key]))
+    }
+
+    xhr.onload = async function() {
+        try{
             if(xhr.status === 200) { 
-                console.log(xhr.response)
-                callback(client, interaction, JSON.parse(xhr.response.body))
+                await callback(client, interaction, JSON.parse(xhr.response))
             } else {
-                interaction.editReply("API 호출중 오류가 발생하였습니다.")
+                await interaction.editReply("API 호출중 오류가 발생하였습니다.")
                 console.error(xhr.status, xhr.statusText);
             }
         }
@@ -46,8 +50,9 @@ module.exports = {
     async execute(client, interaction){
         if (interaction.options.getSubcommand() === "user-info") {
             const name = interaction.options.getString("name")
-            requestAPI(client, interaction, searchCharacter, "armories/characters/" + name + "/profiles+equipment+cards+gems")
-            return
+            requestAPI(client, interaction, searchCharacter, "armories/characters/" + name, {
+                'filters': "profiles+equipment+cards+gems"
+            })
         }
     }
 }
